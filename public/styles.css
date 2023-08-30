@@ -1,0 +1,1 @@
+:root{--b:#000}*{margin:0;padding:0}body,html{background:var(--b);font-family:Arial;overflow:hidden;overscroll-behavior-x:none;position:fixed;user-select:none}div{box-sizing:border-box}.wh{height:100%;width:100%}.jc{align-items:center;display:flex;justify-content:center}.game{background:#fff}

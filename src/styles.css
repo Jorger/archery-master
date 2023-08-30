@@ -1,0 +1,45 @@
+:root {
+  --b: #000;
+}
+
+/* Estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overscroll-behavior-x: none;
+  background: var(--b);
+  font-family: Arial;
+  overflow: hidden;
+  position: fixed;
+  /* -webkit-user-select: none; */
+  user-select: none;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+.wh {
+  width: 100%;
+  height: 100%;
+}
+
+/* #root {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+} */
+
+.jc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* #container {
+  background-color: white;
+} */
