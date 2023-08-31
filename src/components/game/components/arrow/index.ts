@@ -1,10 +1,10 @@
 import type { ArrowProps } from '../../../../interfaces/index';
 
-const Arrow = ({ id, left, top, rotation }: ArrowProps) => /*html*/ `<div
+const Arrow = ({ id, left, top, rotation, scale }: ArrowProps) => /*html*/ `<div
   id="${id}"
   style="position:absolute;transform:rotate(${rotation}deg);width:18px;left:${left}px;top:${top}px"
 >
-  <svg viewBox="0 0 85 470">
+  <svg viewBox="0 0 85 470" style="transform:scaleY(${scale});">
     <polygon
       fill="#E6E9ED"
       points="85.32601928710938,127.98799896240234 51.201019287109375,149.33100128173828 33.516021728515625,149.33100128173828 0,127.98799896240234 0,21.334999084472656 85.32601928710938,21.334999084472656 "

@@ -5,18 +5,19 @@ export type Callback<T> = (
   updateValue: (value: T) => void
 ) => string;
 
-export interface BowProps {
+export interface ArrowProps {
   id?: string;
-  fill: string;
   rotation: number;
   left: number;
   top: number;
   scale: number;
 }
 
-export interface ArrowProps {
-  id?: string;
-  left: number;
-  top: number;
-  rotation: number;
+export interface BowProps extends ArrowProps {
+  fill: string;
+}
+
+export interface Coordinate {
+  x: number;
+  y: number;
 }

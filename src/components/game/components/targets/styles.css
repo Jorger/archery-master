@@ -1,7 +1,7 @@
 .targets {
   position: relative;
-  animation: rotation 1.3s normal linear infinite;
-  /* border: 1px solid red; */
+  /* animation: rotation 1.5s normal linear infinite; */
+  border: 1px solid red;
 }
 
 .target {

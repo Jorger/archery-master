@@ -11,11 +11,21 @@
   border: 1px solid red;
 }
 
-.control {
+/* tenporal */
+/* #pivot {
+  position: absolute;
+  background-color: blue;
+  width: 10px;
+  height: 10px;
+  z-index: 10;
+  transform: translateX(-10px);
+} */
+
+#control {
   width: 100%;
   position: absolute;
   bottom: 0;
   height: 210px;
-  background-color: #00000045;
+  /* background-color: #00000045; */
   cursor: pointer;
 }

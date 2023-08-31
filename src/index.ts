@@ -7,7 +7,7 @@ setHtml(
   $(`#${ROOT}`),
   /*html*/ `<div
     id="${CONTAINER}"
-    style="width:${WIDTH}px;height:${HEIGHT}px"
+    style="overflow: hidden;width:${WIDTH}px;height:${HEIGHT}px"
   ></div>`
 );
 

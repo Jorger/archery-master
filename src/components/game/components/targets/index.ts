@@ -1,15 +1,17 @@
 import './styles.css';
 
+// const distribution
+
 const Target = (id = '', left = 0, top = 0) => {
-  return /*html*/ `<div class="target" id=${id} style="left:${left}px;top:${top}px"></div>`;
+  return /*html*/ `<div class="target" id=${id} style="left:${left}px;top:${top}px">${id}</div>`;
 };
 
 const Targets = (type = 0) => {
   return /*html*/ `<div class="targets" style="width:100px;height:100px">
   ${Target('t-1', 10, 10)}
-  ${Target('t-1', 50, 10)}
-  ${Target('t-1', 10, 50)}
-  ${Target('t-1', 50, 50)}
+  ${Target('t-2', 50, 10)}
+  ${Target('t-3', 10, 50)}
+  ${Target('t-4', 50, 50)}
   </div>`;
 };
 

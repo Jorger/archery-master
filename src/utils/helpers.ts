@@ -38,6 +38,9 @@ export const addStyle = (
   }
 };
 
+export const getDOMRect = (element: HTMLElement) =>
+  element.getBoundingClientRect();
+
 export const newArray = <T>(size: number, cb: Callback<T>): string =>
   new Array(size)
     .fill(null)
