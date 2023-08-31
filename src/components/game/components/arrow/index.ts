@@ -1,6 +1,9 @@
-import { html } from '../../../utils/helpers';
+import type { ArrowProps } from '../../../../interfaces/index';
 
-const Arrow = () => html`<div style="width:25px;">
+const Arrow = ({ id, left, top, rotation }: ArrowProps) => /*html*/ `<div
+  id="${id}"
+  style="position:absolute;transform:rotate(${rotation}deg);width:18px;left:${left}px;top:${top}px"
+>
   <svg viewBox="0 0 85 470">
     <polygon
       fill="#E6E9ED"

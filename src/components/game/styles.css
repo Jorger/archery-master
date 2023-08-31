@@ -1,3 +1,21 @@
 .game {
-  background: white;
+  background: #5e3231;
+  position: relative;
+}
+
+/* Temporal */
+#arrow-1,
+#arrow-2,
+#bow-1,
+#bow-2 {
+  border: 1px solid red;
+}
+
+.control {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 210px;
+  background-color: #00000045;
+  cursor: pointer;
 }

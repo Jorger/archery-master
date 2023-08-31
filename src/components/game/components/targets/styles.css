@@ -1,0 +1,28 @@
+.targets {
+  position: relative;
+  animation: rotation 1.3s normal linear infinite;
+  /* border: 1px solid red; */
+}
+
+.target {
+  height: 35px;
+  width: 35px;
+  position: absolute;
+  border-radius: 50%;
+  background-image: radial-gradient(circle at center center, #de906d, #ffffff),
+    repeating-radial-gradient(
+      circle at center center,
+      #de906d,
+      #de906d,
+      4px,
+      transparent 8px,
+      transparent 4px
+    );
+  background-blend-mode: multiply;
+  /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
+    rgba(0, 0, 0, 0.05) 0px 5px 10px; */
+}

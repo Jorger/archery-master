@@ -4,7 +4,7 @@ import { WIDTH, HEIGHT } from './constants';
 export const $ = document.querySelector.bind(document);
 export const $$ = document.querySelectorAll.bind(document);
 
-export const html = String.raw;
+// export const html = String.raw;
 
 export const isMobile = () =>
   /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

@@ -1,11 +1,11 @@
 import './styles.css';
-import { $, $on, html, onWindowResize, setHtml } from './utils/helpers';
+import { $, $on, onWindowResize, setHtml } from './utils/helpers';
 import { ROOT, CONTAINER, HEIGHT, WIDTH } from './utils/constants';
 import Screen from './screens/index';
 
 setHtml(
   $(`#${ROOT}`),
-  html`<div
+  /*html*/ `<div
     id="${CONTAINER}"
     style="width:${WIDTH}px;height:${HEIGHT}px"
   ></div>`
