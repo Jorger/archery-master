@@ -1,5 +1,5 @@
 .bow {
   position: absolute;
   width: 60px;
-  /* transition: all 140ms ease; */
+  transition: all 140ms ease;
 }

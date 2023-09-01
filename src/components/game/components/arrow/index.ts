@@ -2,7 +2,7 @@ import type { ArrowProps } from '../../../../interfaces/index';
 
 const Arrow = ({ id, left, top, rotation, scale }: ArrowProps) => /*html*/ `<div
   id="${id}"
-  style="position:absolute;transform:rotate(${rotation}deg);width:18px;left:${left}px;top:${top}px"
+  style="transition: transform 140ms ease;position:absolute;transform:rotate(${rotation}deg);width:18px;left:${left}px;top:${top}px"
 >
   <svg viewBox="0 0 85 470" style="transform:scaleY(${scale});">
     <polygon

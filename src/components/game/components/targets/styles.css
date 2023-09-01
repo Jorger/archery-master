@@ -8,7 +8,7 @@
   height: 35px;
   width: 35px;
   position: absolute;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   background-image: radial-gradient(circle at center center, #de906d, #ffffff),
     repeating-radial-gradient(
       circle at center center,

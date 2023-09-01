@@ -8,19 +8,16 @@ const ANIMATION: {
   animate: boolean;
   interval?: NodeJS.Timeout;
   angle: number;
-  direction: number;
   point: Coordinate;
 }[] = [
   {
     animate: false,
     angle: 0,
-    direction: -1,
     point: { x: 0, y: 0 }
   },
   {
     animate: false,
     angle: 0,
-    direction: 1,
     point: { x: 0, y: 0 }
   }
 ];
@@ -55,21 +52,21 @@ export const DATA_BOW_ARROW: {
     },
     arrow: {
       left: 195,
-      top: 88,
+      top: 75,
       rotation: 0,
       scale: 1
     }
   }
 ];
 
-const movePointAtAngle = (
-  point: Coordinate,
-  angle: number,
-  distance: number
-): Coordinate => ({
-  x: point.x + Math.sin(angle) * distance,
-  y: point.y - Math.cos(angle) * distance
-});
+// const movePointAtAngle = (
+//   point: Coordinate,
+//   angle: number,
+//   distance: number
+// ): Coordinate => ({
+//   x: point.x + Math.sin(angle) * distance,
+//   y: point.y - Math.cos(angle) * distance
+// });
 
 const getPositionRelativeToParent = (
   parentElement: HTMLElement,
@@ -143,7 +140,7 @@ const calculateAngle = (p1: Coordinate, p2: Coordinate) =>
 //   // );
 // };
 
-export const getPositionTile = (event: MouseEvent | TouchEvent) => {
+export const getPositionTile = (event: MouseEvent | TouchEvent): Coordinate => {
   const { left, top } = getDOMRect($('#control') as HTMLElement);
 
   let clientX = 0;
@@ -224,18 +221,25 @@ const rotateBow = (destination: Coordinate) => {
 
   // const { left: x, top: y } = DATA_BOW_ARROW[0].bow;
   const angle = calculateAngle(pivot, destination);
+
   // const direction = getDirection(angle);
 
   // if (['left', 'right'].includes(direction as string)) {
   // const newAngle = Math.round(270 + (90 - Math.abs(angle)));
   const newAngle = normalizeAngle(angle);
+
   // console.log({ newAngle });
-  // if (newAngle >= 215 && newAngle <= 325) {
-  addStyle(bow, { transform: `rotate(${newAngle}deg)` });
-  const angleArrow = normalizeAngle(newAngle - 270);
-  // Tiene que ser dinamico...
-  ANIMATION[0].angle = angleArrow;
-  addStyle($('#arrow-1'), { transform: `rotate(${angleArrow}deg)` });
+  // console.log({ newAngle });
+  if (newAngle >= 180 && newAngle <= 360) {
+    addStyle(bow, { transform: `rotate(${newAngle}deg)` });
+    const angleArrow = newAngle - 270;
+    // console.log({ angleArrow }, newAngle - 270);
+    // Tiene que ser dinamico...
+    // const diference = (ANIMATION[0].angle - angleArrow);
+    // console.log({ diference });
+    ANIMATION[0].angle = angleArrow;
+    addStyle($('#arrow-1'), { transform: `rotate(${angleArrow}deg)` });
+  }
   // console.log({ newAngle, angleArrow });
   /*
   90 es 180
@@ -274,9 +278,9 @@ const rotateBow = (destination: Coordinate) => {
 function isRectColliding(rect1: DOMRect, rect2: DOMRect) {
   return (
     rect1.x + 18 >= rect2.x &&
-    rect2.x + 35 >= rect1.x &&
+    rect2.x + 30 >= rect1.x &&
     rect1.y + 90 >= rect2.y &&
-    rect2.y + 35 >= rect1.y
+    rect2.y + 30 >= rect1.y
   );
 }
 
@@ -344,8 +348,8 @@ const moveArrow = (index = 1) => {
 
   const angleInRadians = (angle - 90) * (Math.PI / 180);
 
-  const newX = point.x + 15 * Math.cos(angleInRadians);
-  const newY = point.y + 15 * Math.sin(angleInRadians);
+  const newX = point.x + 10 * Math.cos(angleInRadians);
+  const newY = point.y + 10 * Math.sin(angleInRadians);
   // console.log({ w, h });
 
   // console.log(ANIMATION[index - 1]);
@@ -422,4 +426,13 @@ export const addEvents = () => {
   ];
 
   eventPairs.forEach((v) => $on($('#control') as HTMLElement, v[0], v[1]));
+
+  const tmp = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
+
+  const { left: x, top: y } = getPositionRelativeToParent(
+    $('.game') as HTMLElement,
+    $('#t-1') as HTMLElement
+  );
+
+  console.log('ANGULO ES: ', normalizeAngle(calculateAngle(tmp, { x, y })));
 };
