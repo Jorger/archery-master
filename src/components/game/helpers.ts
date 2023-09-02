@@ -427,12 +427,12 @@ export const addEvents = () => {
 
   eventPairs.forEach((v) => $on($('#control') as HTMLElement, v[0], v[1]));
 
-  const tmp = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
+  // const tmp = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
 
-  const { left: x, top: y } = getPositionRelativeToParent(
-    $('.game') as HTMLElement,
-    $('#t-1') as HTMLElement
-  );
+  // const { left: x, top: y } = getPositionRelativeToParent(
+  //   $('.game') as HTMLElement,
+  //   $('#t-1') as HTMLElement
+  // );
 
-  console.log('ANGULO ES: ', normalizeAngle(calculateAngle(tmp, { x, y })));
+  // console.log('ANGULO ES: ', normalizeAngle(calculateAngle(tmp, { x, y })));
 };
