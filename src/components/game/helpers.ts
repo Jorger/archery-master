@@ -1,24 +1,53 @@
-import type { BowProps, ArrowProps, Coordinate } from '../../interfaces/index';
+import {
+  $,
+  $$,
+  $on,
+  addStyle,
+  classList,
+  getDOMRect,
+  hasClass,
+  randomNumber,
+  setHtml
+} from '../../utils/helpers';
 import { HEIGHT, WIDTH } from '../../utils/constants';
-import { $, $$, $on, addStyle, getDOMRect } from '../../utils/helpers';
+import { Targets } from './components/index';
+import type { BowProps, ArrowProps, Coordinate } from '../../interfaces/index';
+import { TYPES } from './components/targets/helpers';
 
 let IS_MOUSE_DOWN = false;
+// Para guardar el intervalo de segimiento del arco del bot a su target...
+let BOW_INTERVAL_FOLLOW_TARGET: NodeJS.Timeout;
+// Para la clase que oculta los targets...
+const HIDE_TARGET_CLASS = 'hide';
+// La puntuación máxima...
+const MAX_SCORE = 70;
+// Para saber si es gameOver
+let IS_GAME_OVER = false;
 
 const ANIMATION: {
   animate: boolean;
   interval?: NodeJS.Timeout;
   angle: number;
+  score: number;
+  arrows: number;
+  hasArrow: boolean;
   point: Coordinate;
 }[] = [
   {
     animate: false,
     angle: 0,
-    point: { x: 0, y: 0 }
+    point: { x: 0, y: 0 },
+    score: 0,
+    arrows: 0,
+    hasArrow: true
   },
   {
     animate: false,
     angle: 0,
-    point: { x: 0, y: 0 }
+    point: { x: 0, y: 0 },
+    score: 0,
+    arrows: 0,
+    hasArrow: true
   }
 ];
 // let INITIAL_POINT_CLICK: Coordinate = { x: 0, y: 0 };
@@ -275,13 +304,43 @@ const rotateBow = (destination: Coordinate) => {
 //   return { x: newX, y: newY, angle };
 // }
 
+const updateScore = () =>
+  setHtml(
+    $('.score') as HTMLElement,
+    `<span>${ANIMATION[0].score}</span> - <span>${ANIMATION[1].score}</span>`
+  );
+
+/**
+ * Retorna los tatgets que están visibles...
+ * @returns
+ */
+const getVisibleTargets = () =>
+  [...$$('.target')].filter(
+    (v) => !hasClass(v as HTMLElement, HIDE_TARGET_CLASS)
+  );
+
 function isRectColliding(rect1: DOMRect, rect2: DOMRect) {
-  return (
+  const reemplace =
     rect1.x + 18 >= rect2.x &&
     rect2.x + 30 >= rect1.x &&
     rect1.y + 90 >= rect2.y &&
-    rect2.y + 30 >= rect1.y
-  );
+    rect2.y + 30 >= rect1.y;
+
+  // if (reemplace) {
+  //   console.log(
+  //     rect1.x + 18,
+  //     rect2.x,
+  //     rect2.x + 30,
+  //     rect1.x,
+  //     rect1.y + 90,
+  //     rect2.y,
+  //     rect2.y + 30,
+  //     rect1.y
+  //   );
+  //   // debugger;
+  // }
+
+  return reemplace;
 }
 
 const checkCollision = (index: number) => {
@@ -296,7 +355,7 @@ const checkCollision = (index: number) => {
   //   return { id: v.id, x: left, y: top };
   // });
 
-  const targets = [...$$('.target')];
+  const targets = getVisibleTargets();
 
   // console.log('targets', targets);
 
@@ -310,14 +369,19 @@ const checkCollision = (index: number) => {
   // console.log(arrowBounds);
 
   for (const target of targets) {
+    let currentTarget = target as HTMLElement;
     const result = isRectColliding(
       getDOMRect($(`#arrow-${index}`) as HTMLElement),
-      getDOMRect(target as HTMLElement)
+      getDOMRect(currentTarget)
     );
 
-    if (result) {
-      console.log('colisiona con: ', target);
-      clearInterval(ANIMATION[index - 1].interval);
+    if (result && !hasClass(currentTarget, HIDE_TARGET_CLASS)) {
+      classList(currentTarget, HIDE_TARGET_CLASS, 'add');
+      ANIMATION[index - 1].score++;
+      // Actualizar el UI y también determinar quien ha ganado...
+      updateScore();
+      // console.log('colisiona con: ', currentTarget);
+      // clearInterval(ANIMATION[index - 1].interval);
     }
 
     // const targetBounds = {
@@ -342,14 +406,52 @@ const checkCollision = (index: number) => {
   // return false; // No se detectó colisión con ningún objetivo
 };
 
+const validateNextTurnOrGameOver = () => {
+  // Saber si uno de los dos ya logró tener el score esperado...
+  const winner = ANIMATION.findIndex((v) => v.score >= MAX_SCORE);
+  // let generateNewTurn = false;
+
+  if (winner >= 0) {
+    clearIntervals();
+    IS_GAME_OVER = true;
+    const winUI = $('.win-ui') as HTMLElement;
+    const name = winner === 0 ? 'RED' : 'BLUE';
+    const color = winner === 0 ? 'r' : 'b';
+    setHtml(winUI, `<span>${name} WIN</span>`);
+    classList(winUI, HIDE_TARGET_CLASS, 'remove');
+    classList(winUI, color, 'add');
+  } else {
+    // Buscar si aún hay targets...
+    const targets = getVisibleTargets();
+    const hasArrows = ANIMATION.filter((v) => v.hasArrow).length !== 0;
+
+    // generateNewTurn = targets.length === 0 || !hasArrows;
+
+    if (targets.length === 0 || !hasArrows) {
+      clearIntervals();
+      arrowReleaseTurn();
+    }
+  }
+
+  // console.log({ generateNewTurn });
+
+  // if (generateNewTurn) {
+
+  // }
+  // console.log({ MAX_SCORE });
+};
+
+const validateArrowOutsiteStage = (x: number, y: number) =>
+  y < -100 || x < -50 || y > HEIGHT + 100 || x > WIDTH + 50;
+
 const moveArrow = (index = 1) => {
   const arrow = $(`#arrow-${index}`) as HTMLElement;
   const { angle, point } = ANIMATION[index - 1];
 
   const angleInRadians = (angle - 90) * (Math.PI / 180);
 
-  const newX = point.x + 10 * Math.cos(angleInRadians);
-  const newY = point.y + 10 * Math.sin(angleInRadians);
+  const newX = point.x + 15 * Math.cos(angleInRadians) * (index === 1 ? 1 : -1);
+  const newY = point.y + 15 * Math.sin(angleInRadians) * (index === 1 ? 1 : -1);
   // console.log({ w, h });
 
   // console.log(ANIMATION[index - 1]);
@@ -360,15 +462,37 @@ const moveArrow = (index = 1) => {
   // console.log(ANIMATION[index - 1].point);
   addStyle(arrow, { left: `${newX}px`, top: `${newY}px` });
 
-  if (newY < -100 || newX < -50 || newY > HEIGHT + 100 || newX > WIDTH + 50) {
+  if (validateArrowOutsiteStage(newX, newY)) {
     console.log('TERMINA');
     ANIMATION[index - 1].animate = false;
     clearInterval(ANIMATION[index - 1].interval);
-    const { left, top } = DATA_BOW_ARROW[index - 1].arrow;
-    addStyle(arrow, { left: `${left}px`, top: `${top}px` });
-  }
 
-  checkCollision(index);
+    const hasArrows = ANIMATION[index - 1].arrows > 0;
+
+    ANIMATION[index - 1].hasArrow = hasArrows;
+
+    if (hasArrows) {
+      const { left, top } = DATA_BOW_ARROW[index - 1].arrow;
+      addStyle(arrow, { left: `${left}px`, top: `${top}px` });
+      classList(
+        $(`#ac-${index}-${ANIMATION[index - 1].arrows}`),
+        HIDE_TARGET_CLASS,
+        'add'
+      );
+
+      ANIMATION[index - 1].arrows--;
+      if (index === 2) {
+        validateBotMovement();
+      }
+    } else {
+      addStyle($(`#bow-${index}`), {
+        transform: `rotate(${DATA_BOW_ARROW[index - 1].bow.rotation}deg)`
+      });
+    }
+    validateNextTurnOrGameOver();
+  } else {
+    checkCollision(index);
+  }
 
   // addStyle($('#arrow-1'), { transform: `rotate(${angleArrow}deg)` });
 
@@ -391,7 +515,12 @@ const shotArrow = (index = 1) => {
 };
 
 const handleMouseDown = (event: MouseEvent | TouchEvent) => {
-  if (!IS_MOUSE_DOWN && !ANIMATION[0].animate) {
+  if (
+    !IS_GAME_OVER &&
+    !IS_MOUSE_DOWN &&
+    !ANIMATION[0].animate &&
+    ANIMATION[0].hasArrow
+  ) {
     // console.log($('#bow-1')!.getBoundingClientRect());
     rotateBow(getPositionTile(event));
     IS_MOUSE_DOWN = true;
@@ -401,7 +530,7 @@ const handleMouseDown = (event: MouseEvent | TouchEvent) => {
 };
 
 const handleMouseUp = () => {
-  if (IS_MOUSE_DOWN && !ANIMATION[0].animate) {
+  if (!IS_GAME_OVER && IS_MOUSE_DOWN && !ANIMATION[0].animate) {
     shotArrow();
     console.log('handleMouseUp');
     IS_MOUSE_DOWN = false;
@@ -409,9 +538,138 @@ const handleMouseUp = () => {
 };
 
 const handleMouseMove = (event: MouseEvent | TouchEvent) => {
-  if (IS_MOUSE_DOWN && !ANIMATION[0].animate) {
+  if (!IS_GAME_OVER && IS_MOUSE_DOWN && !ANIMATION[0].animate) {
     rotateBow(getPositionTile(event));
   }
+};
+
+const clearIntervals = () => {
+  if (BOW_INTERVAL_FOLLOW_TARGET) {
+    clearInterval(BOW_INTERVAL_FOLLOW_TARGET);
+  }
+
+  for (let i = 0; i < ANIMATION.length; i++) {
+    // En este caso quitar los intervalos de movimiento de las flechas...
+    if (ANIMATION[i].interval) {
+      clearInterval(ANIMATION[i].interval);
+    }
+  }
+};
+
+/**
+ * Para hacer el movimiento del BOT...
+ */
+const validateBotMovement = () => {
+  // El indice del target al cual aputará el bot...
+  let targets = getVisibleTargets();
+
+  // console.log({ totalTargets });
+
+  if (targets.length === 0) {
+    return;
+  }
+
+  let targetBot = randomNumber(0, targets.length - 1);
+  let target = targets[targetBot] as HTMLElement;
+  const bow = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
+  let counterToShoot = 0;
+
+  /**
+   * TODO: Se podría modificar la velocidad dependiendo de la dificultad...
+   * también el counterToShoot podría jugar un papel en ello...
+   */
+  // console.log({ targetBotIndex });
+  BOW_INTERVAL_FOLLOW_TARGET = setInterval(() => {
+    const { left: x, top: y } = getPositionRelativeToParent(
+      $('.game') as HTMLElement,
+      target
+    );
+
+    const angle = normalizeAngle(calculateAngle(bow, { x, y }));
+
+    addStyle($('#bow-2'), { transform: `rotate(${angle}deg)` });
+
+    const angleArrow = angle - 270;
+    // console.log({ angleArrow }, newAngle - 270);
+    // Tiene que ser dinamico...
+    // const diference = (ANIMATION[0].angle - angleArrow);
+    // console.log({ diference });
+    ANIMATION[1].angle = angleArrow;
+    addStyle($('#arrow-2'), { transform: `rotate(${angleArrow}deg)` });
+
+    counterToShoot++;
+
+    if (counterToShoot % 20 === 0) {
+      console.log({ counterToShoot });
+      let stopInterval = true;
+
+      /**
+       * TODO, puede ser dependiendo del nivel
+       * Se valida si el target estña visible, si no, se busca otro target
+       */
+      if (hasClass(target, HIDE_TARGET_CLASS)) {
+        targets = getVisibleTargets();
+        console.log('DEBE BUSCAR OTRO BLANCO');
+
+        if (targets.length !== 0) {
+          targetBot = randomNumber(0, targets.length - 1);
+          target = targets[targetBot] as HTMLElement;
+          stopInterval = false;
+        }
+      }
+
+      if (stopInterval) {
+        clearInterval(BOW_INTERVAL_FOLLOW_TARGET);
+        shotArrow(2);
+      }
+    }
+    // console.log('ANGULO ES: ', normalizeAngle(calculateAngle(bow, { x, y })));
+  }, 100);
+};
+
+const arrowReleaseTurn = () => {
+  // Agregar los primeros targets en el escenario
+  const typeTarget = randomNumber(0, TYPES.length - 1);
+  // const typeTarget = 2;
+  setHtml($('#r-target'), Targets(typeTarget));
+  // IS_ANIMATED_TARGET_SHOOTING = TYPES[typeTarget].a || false;
+  // Establecer las posiciones de los Arrowws...
+  DATA_BOW_ARROW.forEach(({ arrow, bow }, index) => {
+    // Se pone los arcos en la rotación correcta...
+    addStyle($(`#bow-${index + 1}`), {
+      transform: `rotate(${bow.rotation}deg)`
+    });
+
+    // Ahora se pone las flechas en la posición y águlo inicial...
+    addStyle($(`#arrow-${index + 1}`), {
+      left: `${arrow.left}px`,
+      top: `${arrow.top}px`,
+      transform: `rotate(${arrow.rotation}deg)`,
+      display: 'block'
+    });
+  });
+
+  // Reiniciar los valores de ANIMATION
+  for (let i = 0; i < ANIMATION.length; i++) {
+    ANIMATION[i].animate = false;
+    // ANIMATION[i].score = 0;
+    ANIMATION[i].arrows = 2;
+    ANIMATION[i].hasArrow = true;
+    // En este caso quitar los intervalos de movimiento de las flechas...
+    if (ANIMATION[i].interval) {
+      clearInterval(ANIMATION[i].interval);
+    }
+
+    for (let c = 1; c <= 3; c++) {
+      classList(
+        $(`#ac-${i + 1}-${c}`),
+        HIDE_TARGET_CLASS,
+        c === 3 ? 'add' : 'remove'
+      );
+    }
+  }
+
+  validateBotMovement();
 };
 
 export const addEvents = () => {
@@ -426,6 +684,34 @@ export const addEvents = () => {
   ];
 
   eventPairs.forEach((v) => $on($('#control') as HTMLElement, v[0], v[1]));
+
+  // Para el botón salir...
+  $on($('#exit') as HTMLElement, 'click', () => {
+    clearIntervals();
+    console.log('IR A LA PÁGINA DEL LOBBY');
+  });
+
+  updateScore();
+
+  IS_GAME_OVER = false;
+  for (let i = 0; i < ANIMATION.length; i++) {
+    ANIMATION[i].score = 0;
+  }
+
+  // Para el contador de entrada...
+  let inputCounter = 3;
+  const inputInterval = setInterval(() => {
+    setHtml($('.lock-ui'), String(inputCounter));
+    inputCounter--;
+
+    if (inputCounter < 0) {
+      classList($('.lock-ui'), HIDE_TARGET_CLASS, 'add');
+      clearInterval(inputInterval);
+      arrowReleaseTurn();
+    }
+  }, 1000);
+
+  // Crear el lanzamiento...
 
   // const tmp = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
 

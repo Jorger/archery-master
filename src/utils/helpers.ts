@@ -38,6 +38,32 @@ export const addStyle = (
   }
 };
 
+export const hasClass = (target: null | HTMLElement, className: string) => {
+  if (target) {
+    for (let classText of className.split(' ')) {
+      return target.classList.contains(classText);
+    }
+  }
+};
+
+/**
+ * Agrega o elimina una clase de un elemento...
+ * @param {*} target
+ * @param {*} className
+ * @param {*} type
+ */
+export const classList = (
+  target: null | HTMLElement,
+  className: string,
+  type: 'add' | 'remove' = 'add'
+) => {
+  if (target) {
+    className.split(' ').forEach((classText) => {
+      target.classList[type](classText);
+    });
+  }
+};
+
 export const getDOMRect = (element: HTMLElement) =>
   element.getBoundingClientRect();
 

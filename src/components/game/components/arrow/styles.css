@@ -1,0 +1,9 @@
+.arrow {
+  transition: transform 140ms ease;
+  position: absolute;
+  width: 18px;
+}
+
+.arrow.hide {
+  animation: bounceOut 0.3s both;
+}

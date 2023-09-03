@@ -1,6 +1,6 @@
 import './styles.css';
-import { $, $on, onWindowResize, setHtml } from './utils/helpers';
-import { ROOT, CONTAINER, HEIGHT, WIDTH } from './utils/constants';
+import { $, $on, setHtml } from './utils/helpers';
+import { CONTAINER, HEIGHT, ROOT, WIDTH } from './utils/constants';
 import Screen from './screens/index';
 
 setHtml(
@@ -13,7 +13,7 @@ setHtml(
 
 $on(document as any, 'contextmenu', (event) => event.preventDefault());
 
-$on(window as any, 'resize', onWindowResize);
-onWindowResize();
+// $on(window as any, 'resize', onWindowResize);
+// onWindowResize();
 
 Screen('Game');
