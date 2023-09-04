@@ -6,7 +6,9 @@
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=production",
     "start": "webpack-dev-server --config webpack.config.js",
-    "serve": "npm run build && serve -s public -l 4000"
+    "serve": "npm run build && serve -s public -l 4000",
+    "deploy": "npm run build && vercel public --prod",
+    "vercel": "vercel"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
     "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
+    "vercel": "^32.1.0",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"

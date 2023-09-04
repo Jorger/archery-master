@@ -15,7 +15,7 @@ body {
   font-family: Arial;
   overflow: hidden;
   position: fixed;
-  /* -webkit-user-select: none; */
+  -webkit-user-select: none;
   user-select: none;
 }
 

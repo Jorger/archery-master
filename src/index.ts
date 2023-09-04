@@ -16,4 +16,5 @@ $on(document as any, 'contextmenu', (event) => event.preventDefault());
 // $on(window as any, 'resize', onWindowResize);
 // onWindowResize();
 
-Screen('Game');
+// Screen('Game', { dificulty: 1 });
+Screen('Lobby');

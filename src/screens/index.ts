@@ -1,13 +1,13 @@
 import type { Params } from '../interfaces/index';
-import { Game } from '../components/index';
+import { Game, Lobby } from '../components/index';
 
 type HandlerType = {
   [key: string]: (params: Params) => void;
 };
 
-const Handler: HandlerType = { Game };
+const Handler: HandlerType | any = { Game, Lobby };
 
-const Screen = (screen = 'Game', params = {}) => {
+const Screen = (screen: 'Lobby' | 'Game' = 'Lobby', params = {}) => {
   Handler[screen](params);
 };
 

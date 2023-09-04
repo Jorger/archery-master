@@ -114,11 +114,12 @@ const Target = (id = '', left = 0, top = 0) =>
 
 const Targets = (type = 0) => {
   const { w, h, p, a = false } = TYPES[type];
+  const animate = a || randomNumber(0, 1) === 1;
   let vars = '';
 
-  if (a) {
+  if (animate) {
     const deg = randomNumber(0, 1);
-    vars = `--s:${randomNumber(3, 5)}s;--i:${deg ? '0' : '359'}deg;--f:${
+    vars = `--s:${randomNumber(2, 5)}s;--i:${deg ? '0' : '359'}deg;--f:${
       deg ? '359' : '0'
     }deg;`;
   }
@@ -126,7 +127,7 @@ const Targets = (type = 0) => {
   $('html' as any).style.cssText = vars;
 
   return /*html*/ `<div class="targets${
-    a ? ' a' : ''
+    animate ? ' a' : ''
   }" style="width:${w}px;height:${h}px;">
   ${p.map(([x, y], i) => Target(`t-${i}`, x, y)).join('')}
   </div>`;

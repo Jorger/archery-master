@@ -3,17 +3,9 @@ import { $, setHtml } from '../../utils/helpers';
 import { Arrow, Bow, Case } from './components/index';
 import { CONTAINER } from '../../utils/constants';
 import { DATA_BOW_ARROW, addEvents } from './helpers';
-// Targets
-// <div id="r-target">${Targets(0)}</div>
-// <div id="pivot"></div>
-// <div class="lock-ui wh jc"></div>
 
-// <span>RED WIN</span> b r
-// <div class="tmp" id=tmp-1></div>
-//   <div class="tmp" id=tmp-2></div>
-
-const Game = () => {
-  const data =
+const Game = ({ dificulty = 1 }: { dificulty: number }) => {
+  const render =
     /*html*/
     `<div class="game wh jc">
       <div class="lock-ui wh jc"></div>
@@ -34,13 +26,8 @@ const Game = () => {
       <div id="control"></div>
   </div>`;
 
-  setHtml($(`#${CONTAINER}`), data);
-  addEvents();
-
-  // <button id=btn style="position: absolute;top: 30px;left: 30px;font-size: 30px;">Test</button>
-  // $on($('#btn') as HTMLElement, 'click', () => {
-  //   setHtml($('#r-target'), Targets(randomNumber(0, 7)));
-  // });
+  setHtml($(`#${CONTAINER}`), render);
+  addEvents(dificulty);
 };
 
 export default Game;
