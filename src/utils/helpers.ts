@@ -77,12 +77,12 @@ export const newArray = <T>(size: number, cb: Callback<T>): string =>
 export const randomNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
-export const onWindowResize = () => {
-  const { innerWidth: w, innerHeight: h } = window;
-  const scale = Math.min(w / WIDTH, h / HEIGHT);
-  const mobile = isMobile();
-  addStyle($('body'), {
-    zoom: `${w < WIDTH ? Math.round((w / WIDTH) * 100) : 100}%`,
-    transform: scale >= 1 || mobile ? `scale(${!mobile ? scale : 1})` : 'none'
-  });
-};
+// export const onWindowResize = () => {
+//   const { innerWidth: w, innerHeight: h } = window;
+//   const scale = Math.min(w / WIDTH, h / HEIGHT);
+//   const mobile = isMobile();
+//   addStyle($('body'), {
+//     zoom: `${w < WIDTH ? Math.round((w / WIDTH) * 100) : 100}%`,
+//     transform: scale >= 1 || mobile ? `scale(${!mobile ? scale : 1})` : ''
+//   });
+// };

@@ -215,6 +215,78 @@ export const getPositionTile = (event: MouseEvent | TouchEvent): Coordinate => {
 
 // const rotateArrow = (angle: number) => {};
 
+// function actualizarPosicionPuntaFlecha(
+//   anguloLanzamiento: number,
+//   flechaDiv: HTMLElement
+// ) {
+//   const puntaDiv = document.getElementById('punta');
+//   const posicionFlecha = flechaDiv.getBoundingClientRect();
+//   const anchoFlecha = posicionFlecha.width;
+//   const altoFlecha = posicionFlecha.height;
+
+//   // Calcula la posición de la punta de la flecha en función del ángulo
+//   const radianes = (anguloLanzamiento * Math.PI) / 180;
+//   const xPunta =
+//     posicionFlecha.left +
+//     anchoFlecha / 2 +
+//     (altoFlecha / 2) * Math.sin(radianes);
+//   const yPunta =
+//     posicionFlecha.top + altoFlecha / 2 - (altoFlecha / 2) * Math.cos(radianes);
+
+//   // Actualiza la posición de la punta
+//   // puntaDiv.style.left = `${xPunta - puntaDiv.offsetWidth / 2}px`;
+//   // puntaDiv.style.top = `${yPunta - puntaDiv.offsetHeight / 2}px`;
+//   const left = xPunta;
+//   const top = yPunta;
+
+//   addStyle($('#tmp-ball'), {
+//     left: `${left}px`,
+//     top: `${top}px`
+//   });
+// }
+
+function updateArrowTipPosition(
+  launchAngle: number,
+  arrowDiv: HTMLElement,
+  index: number
+) {
+  const arrowPosition = getDOMRect(arrowDiv);
+  const arrowWidth = arrowPosition.width;
+  const arrowHeight = arrowPosition.height;
+
+  // const adjustedAngle = scaleY === '1' ? launchAngle : -launchAngle;
+
+  // Calculate the position of the arrow tip based on the launch angle
+  // const radians = (launchAngle * Math.PI) / 180;
+  // const radians = (adjustedAngle * Math.PI) / 180;
+  // const xTip =
+  //   arrowPosition.left + arrowWidth / 2 + (arrowHeight / 2) * Math.sin(radians);
+  // const yTip =
+  //   arrowPosition.top +
+  //   (scaleY === '1' ? arrowHeight : 0) +
+  //   arrowHeight / 2 -
+  //   (arrowHeight / 2) * Math.cos(radians);
+
+  const adjustedAngle = launchAngle * (index === 1 ? 1 : -1);
+
+  const radians = (adjustedAngle * Math.PI) / 180;
+
+  const xTip =
+    arrowPosition.left + arrowWidth / 2 + (arrowHeight / 2) * Math.sin(radians);
+
+  const yTip =
+    arrowPosition.top +
+    (index === 2 ? arrowHeight - 20 : 0) +
+    arrowHeight / 2 -
+    (arrowHeight / 2) * Math.cos(radians);
+
+  // Update the position of the tip
+  // tipDiv.style.left = `${xTip - tipDiv.offsetWidth / 2}px`;
+  // tipDiv.style.top = `${yTip - tipDiv.offsetHeight / 2}px`;
+
+  return { x: xTip, y: yTip };
+}
+
 /**
  * Función que haría el proceso de girar el arco del jugador...
  * @param destination
@@ -268,6 +340,7 @@ const rotateBow = (destination: Coordinate) => {
     // console.log({ diference });
     ANIMATION[0].angle = angleArrow;
     addStyle($('#arrow-1'), { transform: `rotate(${angleArrow}deg)` });
+    // updateArrowTipPosition(angleArrow, $('#arrow-1') as HTMLElement);
   }
   // console.log({ newAngle, angleArrow });
   /*
@@ -319,91 +392,213 @@ const getVisibleTargets = () =>
     (v) => !hasClass(v as HTMLElement, HIDE_TARGET_CLASS)
   );
 
-function isRectColliding(rect1: DOMRect, rect2: DOMRect) {
-  const reemplace =
-    rect1.x + 18 >= rect2.x &&
-    rect2.x + 30 >= rect1.x &&
-    rect1.y + 90 >= rect2.y &&
-    rect2.y + 30 >= rect1.y;
+// function isRectColliding(rect1: DOMRect, rect2: DOMRect) {
+//   // const body = $('body');
+//   // const scale = +(body?.style?.transform?.match(/[\d\.]+/)?.[0] || '1');
+//   // const zoom = +(
+//   //   (body?.style as CSSStyleDeclaration & { zoom: string })?.zoom?.match(
+//   //     /[\d\.]+/
+//   //   )?.[0] || '100'
+//   // );
 
-  // if (reemplace) {
-  //   console.log(
-  //     rect1.x + 18,
-  //     rect2.x,
-  //     rect2.x + 30,
-  //     rect1.x,
-  //     rect1.y + 90,
-  //     rect2.y,
-  //     rect2.y + 30,
-  //     rect1.y
-  //   );
-  //   // debugger;
-  // }
+//   // const finalScale = !isNaN(scale) ? +scale : 1;
+//   // const finalZoom = !isNaN(zoom) ? +zoom : 100;
+//   // const zoomRemove = (100 - finalZoom) / 100;
 
-  return reemplace;
-}
+//   // const realDimension = Math.round(
+//   //   30 * finalScale - 30 * finalScale * zoomRemove
+//   // );
 
-const checkCollision = (index: number) => {
-  // const { x, y } = ANIMATION[index - 1].point;
+//   // console.log({ finalScale, finalZoom, zoomRemove, realDimension });
 
-  // const targets = [...$$('.target')].map((v) => {
-  //   const { top, left } = getPositionRelativeToParent(
-  //     $('.game') as HTMLElement,
-  //     v as HTMLElement
-  //   );
+//   // const reemplace =
+//   //   rect1.x + 18 >= rect2.x &&
+//   //   rect2.x + 30 >= rect1.x &&
+//   //   rect1.y + 90 >= rect2.y &&
+//   //   rect2.y + 30 >= rect1.y;
 
-  //   return { id: v.id, x: left, y: top };
-  // });
+//   // const rect1Position = {
+//   //   start: {
+//   //     x: Math.round(rect1.x),
+//   //     y:  Math.round(rect1.y),
+//   //   },
+//   //   end : {
+//   //     x: Math.round(rect1.x + rect1.width),
+//   //     y: Math.round(rect1.y + rect1.height),
+//   //   }
+//   // };
 
-  const targets = getVisibleTargets();
+//   // const arrow = {
 
-  // console.log('targets', targets);
+//   // }
 
-  // const arrowBounds = {
-  //   left: x,
-  //   right: x + 18,
-  //   top: y,
-  //   bottom: y + 90
+//   const rect2Position = {
+//     start: {
+//       x: Math.round(rect2.x),
+//       y: Math.round(rect2.y)
+//     },
+//     end: {
+//       x: Math.round(rect2.x + rect2.width),
+//       y: Math.round(rect2.y + rect2.height)
+//     }
+//   };
+
+//   addStyle($('#tmp-ball'), { left: `${rect1.x}px`, top: `${rect1.y}px` });
+
+//   const reemplace =
+//     rect1.x >= rect2Position.start.x &&
+//     rect1.y >= rect2Position.start.y &&
+//     rect1.x <= rect2Position.end.x &&
+//     rect1.y <= rect2Position.end.y;
+
+//   // const reemplace =
+//   //   rect1.x + rect1.width >= rect2.x &&
+//   //   rect2.x + rect2.width >= rect1.x &&
+//   //   rect1.y + rect1.height >= rect2.y &&
+//   //   rect2.y + rect2.height >= rect1.y;
+
+//   if (reemplace) {
+//     console.log({ x: rect1.x, y: rect1.y });
+//     console.log(rect2Position);
+//     // debugger;
+//   }
+
+//   return reemplace;
+// }
+
+const isPointInside = (
+  point: Coordinate,
+  container: { start: Coordinate; end: Coordinate }
+) => {
+  return (
+    point.x >= container.start.x &&
+    point.y >= container.start.y &&
+    point.x <= container.end.x &&
+    point.y <= container.end.y
+  );
+};
+
+const isCollision = (index: number, target: HTMLElement) => {
+  const arrow = $(`#arrow-${index}`) as HTMLElement;
+  const { angle } = ANIMATION[index - 1];
+  const { x, y } = updateArrowTipPosition(angle, arrow, index);
+  const targetPosition = getDOMRect(target);
+
+  // const rectArrowPosition = {
+  //   start: {
+  //     x: arrowPosition.x,
+  //     y: arrowPosition.y
+  //   },
+  //   end: {
+  //     x: arrowPosition.x + 10,
+  //     y: arrowPosition.y + 10,
+  //   }
   // };
 
-  // console.log(arrowBounds);
+  const rectTargetPosition = {
+    start: {
+      x: Math.round(targetPosition.x),
+      y: Math.round(targetPosition.y)
+    },
+    end: {
+      x: Math.round(targetPosition.x + targetPosition.width),
+      y: Math.round(targetPosition.y + targetPosition.height)
+    }
+  };
+
+  const collision =
+    isPointInside({ x: x - 3, y }, rectTargetPosition) ||
+    isPointInside({ x, y }, rectTargetPosition) ||
+    isPointInside({ x: x + 3, y }, rectTargetPosition);
+
+  // const collision = isPointInside(rectArrowPosition.start, rectTargetPosition) ||
+  // isPointInside(rectArrowPosition.end)
+  //   arrowPosition.x >= rectTargetPosition.start.x &&
+  //   arrowPosition.y >= rectTargetPosition.start.y &&
+  //   arrowPosition.x <= rectTargetPosition.end.x &&
+  //   arrowPosition.y <= rectTargetPosition.end.y;
+
+  // const collision =
+  //   arrowPosition.x >= rectTargetPosition.start.x &&
+  //   arrowPosition.y >= rectTargetPosition.start.y &&
+  //   arrowPosition.x <= rectTargetPosition.end.x &&
+  //   arrowPosition.y <= rectTargetPosition.end.y;
+
+  addStyle($(`#tmp-${index}`), {
+    left: `${x}px`,
+    top: `${y}px`
+  });
+
+  return collision;
+};
+
+// interface Colliding {
+//   c: Coordinate;
+//   w: number;
+//   h: number;
+// }
+
+// const isRectColliding2 = (arrow: HTMLElement, target: HTMLElement) => {
+//   const parent = $('.game') as HTMLElement;
+//   const arrowPosition = getPositionRelativeToParent(parent, arrow);
+//   const targetPosition = getPositionRelativeToParent(parent, target);
+//   const { width: wa, height: ha } = getDOMRect(arrow);
+//   const { width: wt, height: ht } = getDOMRect(target);
+
+//   console.log({ arrowPosition, targetPosition, wa, ha, wt, ht });
+
+//   const reemplace =
+//     arrowPosition.left + wa >= targetPosition.left &&
+//     targetPosition.left + wt >= arrowPosition.left &&
+//     arrowPosition.top + ha >= targetPosition.top &&
+//     targetPosition.top + ht >= arrowPosition.top;
+
+//   return reemplace;
+
+//   // getPositionRelativeToParent
+// };
+
+// const checkCollision = (index: number) => {
+//   const targets = getVisibleTargets();
+//   const arrow = $(`#arrow-${index}`) as HTMLElement;
+
+//   for (const target of targets) {
+//     const currentTarget = target as HTMLElement;
+//     const result = isRectColliding2(arrow, currentTarget);
+
+//     // const result = isRectColliding(
+//     //   getDOMRect($(`#arrow-${index}`) as HTMLElement),
+//     //   getDOMRect(currentTarget)
+//     // );
+
+//     if (result && !hasClass(currentTarget, HIDE_TARGET_CLASS)) {
+//       classList(currentTarget, HIDE_TARGET_CLASS, 'add');
+//       ANIMATION[index - 1].score++;
+//       debugger;
+//       // Actualizar el UI y también determinar quien ha ganado...
+//       updateScore();
+//     }
+//   }
+// };
+
+const checkCollision = (index: number) => {
+  const targets = getVisibleTargets();
 
   for (const target of targets) {
-    let currentTarget = target as HTMLElement;
-    const result = isRectColliding(
-      getDOMRect($(`#arrow-${index}`) as HTMLElement),
-      getDOMRect(currentTarget)
-    );
+    const currentTarget = target as HTMLElement;
+    const result = isCollision(index, currentTarget);
+    // const result = isRectColliding(
+    //   getDOMRect($(`#arrow-${index}`) as HTMLElement),
+    //   getDOMRect(currentTarget)
+    // );
 
     if (result && !hasClass(currentTarget, HIDE_TARGET_CLASS)) {
       classList(currentTarget, HIDE_TARGET_CLASS, 'add');
       ANIMATION[index - 1].score++;
       // Actualizar el UI y también determinar quien ha ganado...
       updateScore();
-      // console.log('colisiona con: ', currentTarget);
-      // clearInterval(ANIMATION[index - 1].interval);
     }
-
-    // const targetBounds = {
-    //   left: target.x,
-    //   right: target.x + 35,
-    //   top: target.y,
-    //   bottom: target.y + 35
-    // };
-
-    // if (
-    //   arrowBounds.left < targetBounds.right &&
-    //   arrowBounds.right > targetBounds.left &&
-    //   arrowBounds.top < targetBounds.bottom &&
-    //   arrowBounds.bottom > targetBounds.top
-    // ) {
-    //   console.log(arrowBounds);
-    //   console.log(targetBounds);
-    //   console.log('colisiona con: ', target.id);
-    // }
   }
-
-  // return false; // No se detectó colisión con ningún objetivo
 };
 
 const validateNextTurnOrGameOver = () => {
@@ -630,6 +825,7 @@ const validateBotMovement = () => {
 const arrowReleaseTurn = () => {
   // Agregar los primeros targets en el escenario
   const typeTarget = randomNumber(0, TYPES.length - 1);
+  // const typeTarget = 3;
   // const typeTarget = 2;
   setHtml($('#r-target'), Targets(typeTarget));
   // IS_ANIMATED_TARGET_SHOOTING = TYPES[typeTarget].a || false;
@@ -712,6 +908,16 @@ export const addEvents = () => {
   }, 1000);
 
   // Crear el lanzamiento...
+  // arrowReleaseTurn();
+
+  // const { x, y } = updateArrowTipPosition(0, $('#arrow-1') as HTMLElement);
+
+  // // const rect1 = getDOMRect($('#arrow-1') as HTMLElement);
+
+  // addStyle($('#tmp-ball'), {
+  //   left: `${x}px`,
+  //   top: `${y}px`
+  // });
 
   // const tmp = { x: DATA_BOW_ARROW[1].bow.left, y: DATA_BOW_ARROW[1].bow.top };
 

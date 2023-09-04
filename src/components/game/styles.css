@@ -108,3 +108,17 @@
   /* background-color: #00000045; */
   cursor: pointer;
 }
+
+/* TODO: Borrar */
+/* .tmp {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: orange;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#tmp-2 {
+  background: green;
+} */

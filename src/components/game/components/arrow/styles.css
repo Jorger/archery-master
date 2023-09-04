@@ -2,6 +2,7 @@
   transition: transform 140ms ease;
   position: absolute;
   width: 18px;
+  pointer-events: none;
 }
 
 .arrow.hide {

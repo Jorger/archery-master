@@ -9,6 +9,8 @@ import { DATA_BOW_ARROW, addEvents } from './helpers';
 // <div class="lock-ui wh jc"></div>
 
 // <span>RED WIN</span> b r
+// <div class="tmp" id=tmp-1></div>
+//   <div class="tmp" id=tmp-2></div>
 
 const Game = () => {
   const data =
