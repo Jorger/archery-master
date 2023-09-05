@@ -1,4 +1,4 @@
-import { HEIGHT, WIDTH } from '../../utils/constants';
+import { COLORS, HEIGHT, WIDTH } from '../../utils/constants';
 import { Targets } from './components/index';
 import { TYPES } from './components/targets/helpers';
 import {
@@ -59,7 +59,7 @@ export const DATA_BOW_ARROW: {
 }[] = [
   {
     bow: {
-      fill: '#de8f6f',
+      fill: COLORS[0],
       left: 176,
       top: HEIGHT - 190,
       rotation: 270,
@@ -74,7 +74,7 @@ export const DATA_BOW_ARROW: {
   },
   {
     bow: {
-      fill: '#3c7cab',
+      fill: COLORS[1],
       left: 176,
       top: 40,
       rotation: 270,

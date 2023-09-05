@@ -3,3 +3,4 @@ export const WIDTH = 412;
 // export const TILE = Math.floor(WIDTH / 8) - 3;
 export const ROOT = 'root';
 export const CONTAINER = 'container';
+export const COLORS = ['#de8f6f', '#3c7cab'];
