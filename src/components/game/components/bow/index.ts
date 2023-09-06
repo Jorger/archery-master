@@ -1,7 +1,6 @@
 import './styles.css';
 import type { BowProps } from '../../../../interfaces/index';
 
-// border:1px solid ${fill}
 const Bow = ({
   id,
   fill,

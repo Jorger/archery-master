@@ -14,6 +14,8 @@ import {
 } from '../../utils/helpers';
 import Screen from '../../screens/index';
 import type { BowProps, ArrowProps, Coordinate } from '../../interfaces/index';
+import { PlaySound } from '../../utils/sounds';
+import { getValueFromCache, savePropierties } from '../../utils/storage';
 
 let CURRENT_DIFICULTY = 0;
 let IS_MOUSE_DOWN = false;
@@ -248,6 +250,7 @@ const checkCollision = (index: number) => {
       ANIMATION[index - 1].score++;
       // Actualizar el UI y también determinar quien ha ganado...
       updateScore();
+      PlaySound('target');
     }
   }
 };
@@ -265,6 +268,10 @@ const validateNextTurnOrGameOver = () => {
     setHtml(winUI, `<span>${name} WIN</span>`);
     classList(winUI, HIDE_TARGET_CLASS, 'remove');
     classList(winUI, color, 'add');
+    PlaySound('gameOver');
+    const getTotalScore = getValueFromCache('score', { red: 0, blue: 0 });
+    getTotalScore[winner === 0 ? 'red' : 'blue']++;
+    savePropierties('score', getTotalScore);
   } else {
     // Buscar si aún hay targets...
     const targets = getVisibleTargets();
@@ -330,6 +337,7 @@ const shotArrow = (index = 1) => {
   ANIMATION[index - 1].point = { x: left, y: top };
   ANIMATION[index - 1].animate = true;
   ANIMATION[index - 1].interval = setInterval(() => moveArrow(index), 1);
+  PlaySound('shot');
 };
 
 const handleMouseDown = (event: MouseEvent | TouchEvent) => {
@@ -501,6 +509,7 @@ export const addEvents = (dificulty: number) => {
   let inputCounter = 3;
   const inputInterval = setInterval(() => {
     setHtml($('.lock-ui'), String(inputCounter));
+    PlaySound('counter');
     inputCounter--;
 
     if (inputCounter < 0) {

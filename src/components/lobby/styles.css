@@ -68,3 +68,37 @@ h1 {
 .lobby-pe .pe {
   width: 35%;
 }
+
+.lobby-ab,
+.lobby-so {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+  height: 40px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 40px;
+}
+
+.lobby-ab {
+  left: 10px;
+  color: #5e3231;
+}
+
+.lobby-ab:visited {
+  color: #5e3231;
+}
+
+.lobby-co {
+  bottom: 40px;
+  color: black;
+  font-weight: bold;
+  position: absolute;
+  z-index: 20px;
+}
+
+.lobby-co:visited {
+  color: black;
+}

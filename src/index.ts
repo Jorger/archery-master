@@ -1,6 +1,7 @@
 import './styles.css';
 import { $, $on, setHtml } from './utils/helpers';
 import { CONTAINER, HEIGHT, ROOT, WIDTH } from './utils/constants';
+import { PlaySound } from './utils/sounds';
 import Screen from './screens/index';
 
 setHtml(
@@ -13,8 +14,12 @@ setHtml(
 
 $on(document as any, 'contextmenu', (event) => event.preventDefault());
 
-// $on(window as any, 'resize', onWindowResize);
-// onWindowResize();
+const onClickEvent = (e: MouseEvent) => {
+  const target = e.target as Element;
+  if (target && ['a', 'button'].includes(target.tagName.toLowerCase())) {
+    PlaySound('click');
+  }
+};
 
-// Screen('Game', { dificulty: 1 });
+$on(window as any, 'click', onClickEvent);
 Screen('Lobby');

@@ -1,10 +1,10 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin'); // Agregado
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = (_, argv) => {
-  const isProduction = argv.mode === 'production'; // Verifica el modo de ejecución
+  const isProduction = argv.mode === 'production';
 
   return {
     mode: isProduction ? 'production' : 'development',
@@ -15,10 +15,7 @@ module.exports = (_, argv) => {
     },
     optimization: {
       minimize: true,
-      minimizer: [
-        new TerserPlugin(),
-        new CssMinimizerPlugin() // Agregado
-      ]
+      minimizer: [new TerserPlugin(), new CssMinimizerPlugin()]
     },
     resolve: {
       extensions: ['.ts', '.js']
@@ -40,7 +37,7 @@ module.exports = (_, argv) => {
       new MiniCssExtractPlugin({
         filename: 'styles.css',
         chunkFilename: isProduction ? '[id].css' : '[id].[fullhash].css', // Agregado
-        ignoreOrder: false // Agregado
+        ignoreOrder: false
       })
     ],
     devServer: {
