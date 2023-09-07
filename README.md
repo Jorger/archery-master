@@ -7,7 +7,11 @@ Juego desarrollado para la JS13k 2023, en esta edición el tema era [13th Centur
 
 ## 📖 Reglas.
 
-En Archery Master, jugarás versus un bot, la idea es destruir 70 targets, antes del oponente, se cuentan con tres niveles de dificultad.
+En Archery Master, jugarás versus un bot, la idea es destruir 70 targets, antes del oponente, se cuentan con tres niveles de dificultad:
+
+* Easy.
+* Medium.
+* Hard.
 
 
 # 👨🏻‍💻 Autor
