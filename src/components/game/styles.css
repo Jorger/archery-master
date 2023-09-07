@@ -87,6 +87,10 @@
   position: absolute;
   bottom: 0;
   height: 210px;
-  cursor: pointer;
+  cursor: grab;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+#control:active {
+  cursor: grabbing;
 }

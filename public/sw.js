@@ -1,4 +1,4 @@
-var version = 'v1';
+var version = 'v2';
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches

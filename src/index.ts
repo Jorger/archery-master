@@ -23,3 +23,8 @@ const onClickEvent = (e: MouseEvent) => {
 
 $on(window as any, 'click', onClickEvent);
 Screen('Lobby');
+
+console.log(
+  '%cGame developed by Jorge Rubiano.',
+  'color:red; font-size:20px; font-weight: bold; -webkit-text-stroke: 1px black; border-radius:10px; padding: 20px; background-color: black;'
+);

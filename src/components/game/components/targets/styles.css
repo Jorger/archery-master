@@ -30,11 +30,51 @@
   animation: bounceOut 0.2s both;
 }
 
+.target-spe {
+  position: absolute;
+  width: 100%;
+  height: 35px;
+}
+
+.target-spe.left {
+  --init: -50px;
+  --end: 50px;
+  animation: shake 4s normal linear infinite;
+}
+
+.target-spe.right {
+  --init: 50px;
+  --end: -50px;
+  animation: shake 4s normal linear infinite;
+}
+
 @keyframes rotation {
   from {
     transform: rotate(var(--i));
   }
   to {
     transform: rotate(var(--f));
+  }
+}
+
+@keyframes shake {
+  from,
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translate3d(var(--init), 0, 0);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translate3d(var(--end), 0, 0);
   }
 }

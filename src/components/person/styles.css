@@ -3,11 +3,13 @@
 }
 
 .pe-sco {
-  position: absolute;
-  top: 20px;
-  left: 60px;
-  z-index: 10;
+  color: white;
   font-size: 40px;
   font-weight: bold;
-  color: white;
+  left: 33px;
+  position: absolute;
+  text-align: center;
+  top: 20px;
+  width: 80px;
+  z-index: 10;
 }

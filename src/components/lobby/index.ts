@@ -1,14 +1,16 @@
 import './styles.css';
 import { $, $$, $on, setHtml } from '../../utils/helpers';
 import { COLORS, CONTAINER } from '../../utils/constants';
+import { getValueFromCache } from '../../utils/storage';
 import { isSoundsEnabled, toogleSounds } from '../../utils/sounds';
 import Person from '../person/index';
 import Screen from '../../screens/index';
-import { getValueFromCache } from '../../utils/storage';
 
 const Lobby = () => {
   const render = /*html*/ `<div class="lobby wh">
-  <button class="lobby-so jc">${isSoundsEnabled() ? '🔈' : '🔇'}</button>
+  <button title="Sounds" class="lobby-so jc">${
+    isSoundsEnabled() ? '🔈' : '🔇'
+  }</button>
   <a title="Jorge Rubiano" href="https://bio.link/jorgerub" target="_blank" rel="noopener noreferrer" class="lobby-ab jc">👨🏻‍💻</a>
   <h1>ARCHERY MASTER</h1>
   <div class="lobby-btn jc">
@@ -25,7 +27,7 @@ const Lobby = () => {
       ${Person({ color: COLORS[0], score: 0, type: 'red' })}
       ${Person({ color: COLORS[1], score: 0, type: 'blue' })}
     </div>
-    <a href="https://js13kgames.com/" target="_blank" rel="noopener noreferrer" class="lobby-co">JS13k - 2023</a>
+    <a href="https://js13kgames.com/" target="_blank" rel="noopener noreferrer" class="lobby-co">JS13K - 2023</a>
   </div>`;
 
   setHtml($(`#${CONTAINER}`), render);

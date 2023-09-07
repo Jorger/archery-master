@@ -437,7 +437,8 @@ const validateBotMovement = () => {
 
 const arrowReleaseTurn = () => {
   // Agregar los primeros targets en el escenario
-  const typeTarget = randomNumber(0, TYPES.length - 1);
+  const showSpecial = CURRENT_DIFICULTY === 3 && randomNumber(0, 1) === 1;
+  const typeTarget = !showSpecial ? randomNumber(0, TYPES.length) : 8;
   setHtml($('#r-target'), Targets(typeTarget));
   // Establecer las posiciones de los Arrowws...
   DATA_BOW_ARROW.forEach(({ arrow, bow }, index) => {
