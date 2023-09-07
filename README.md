@@ -10,5 +10,8 @@ Juego desarrollado para la JS13k 2023, en esta edición el tema era [13th Centur
 En Archery Master, jugarás versus un bot, la idea es destruir 70 targets, antes del oponente, se cuentan con tres niveles de dificultad.
 
 
-https://github.com/Jorger/archery-master/assets/30050/15f2ca6e-4614-438b-b921-8b3b9b6d2f1a
-_Ejemplo Nivel difícil_
+# 👨🏻‍💻 Autor
+
+* Jorge Rubiano 
+[@ostjh](https://twitter.com/ostjh)
+
